@@ -19,22 +19,32 @@ By computing observer-centric horizontal coordinates in real time, the platform 
 
 ## ✨ Key Features
 
-### 1. 🔭 High-DPI Stereographic Sky Dome
+### 1. 🔭 High-DPI Stereographic Sky Dome & 360° Compass Rotation
 - **Conformal Stereographic Projection:** Maps the full 360° celestial hemisphere without angular distortion near the zenith ($r = R \cdot \frac{\cos(\text{alt})}{1 + \sin(\text{alt})}$).
+- **360° Free Azimuth Sky Rotation:** Freely rotate the celestial dome around the zenith using dragging, two-finger twist gestures, keyboard shortcuts (`[` and `]`), or dedicated rotation dial buttons (`↺`, `🧭 0°`, `↻`). Cardinal directions and celestial objects spin in exact mathematical synchrony.
+- **Mobile Safe Perimeter (Zero Horizon Clipping):** Dynamically adjusts radial clearance ($R_{\text{max}} = \max(90, \min(W, H)/2 - 42)$) and utilizes `100dvh` viewport layout so North, East, South, and West cardinal labels and the full 360° horizon ring remain 100% visible on mobile portrait screens without any bottom cut-offs.
+- **Responsive Label Scaling & Decluttering:** Font sizes smoothly clamp between 8px and 14px based on zoom level. Nakshatra shape subtitles (e.g., *မြင်းခေါင်းသဏ္ဌာန်, ဆင်စွယ်သဏ္ဌာန်*) progressively reveal when zooming in ($\ge 1.25\text{x}$) or selecting an object.
 - **Altitude & Azimuth Grid:** Concentric rings at $30^\circ$ and $60^\circ$, zenith crosshair, and dual Burmese-English cardinal points (*မြောက် N, အရှေ့ E, တောင် S, အနောက် W*).
 - **Sub-Pixel Hit Detection:** Hover and click on any star, constellation line, or planet to open glassmorphism detail cards displaying J2000 astrometric telemetry alongside classical Burmese lore.
 - **X-Ray Earth Mode:** Toggle beneath-the-horizon viewing to inspect celestial bodies before they rise.
 
-### 2. 🌟 Authentic Burmese Nakshatra Dataset (85 Stars, 67 Constellation Lines)
+### 2. 🚀 Full-Screen Space Exploration Mode & Zen HUD
+- **Native Fullscreen Immersion:** Toggle full-screen space exploration with the `F` key or the top-right toolbar button with dynamic High-DPI canvas resizing (`ResizeObserver`).
+- **Interactive Pan & Smooth Zoom:** Freely zoom from 1x full-dome overview up to 4x close-up inspection using mouse wheel, pinch-to-zoom on touchscreens, or floating `+` / `-` buttons. Smoothly pan across zoomed-in constellation clusters.
+- **Minimalist Floating HUD:** Translucent glassmorphism floating HUD bar displaying live time/location telemetry, compact 24-hour time scrubber, Play/Pause animation, speed cycling, and layer toggles.
+- **Zen Mode (`Z` key):** Complete HUD hiding for pure uninterrupted stargazing across the entire display, with a one-touch restore pill.
+- **Fullscreen In-Place Detail Drawer:** Selecting any star, Nakshatra, or planet opens an astrometric glassmorphism drawer directly within the fullscreen canvas without exiting the exploration mode.
+
+### 3. 🌟 Authentic Burmese Nakshatra Dataset (85 Stars, 67 Constellation Lines)
 - Comprehensive catalog of all **27 Burmese Nakshatras** (*အဿဝဏီ / Ashwini* to *ရေဝတီ / Revati*).
 - Astrometrically verified **J2000 Right Ascension (0–24h)** and **Declination ($-90^\circ$ to $+90^\circ$)** for all primary and multi-star stick-figure line segments.
 - Cultural taxonomy including traditional Burmese shapes (*မြင်းခေါင်း, လှေငယ်, ဆင်စွယ်, ကျွဲဦးချို, ဝန်တင်လှည်း*), ruling planetary deities (*ဂြိုဟ်မင်း*), and mythology.
 
-### 3. 🌙 Real-Time Moon Transit & Lahiri Ayanamsa Engine
+### 4. 🌙 Real-Time Moon Transit & Lahiri Ayanamsa Engine
 - Calculates true **Sidereal Longitude** by deducting the high-precision **Lahiri Ayanamsa** ($\approx 24.23^\circ$) from tropical ephemeris coordinates.
 - Displays the active **Transiting Nakshatra (စန်းယှဉ်နက္ခတ်)**, active **Pada (ပါဒ် ၁ မှ ၄)**, transit percentage progress bar, and Burmese lunar phase (*လဆန်း, လပြည့်, လဆုတ်, လကွယ်*).
 
-### 4. 🧭 Birth Sky & Nakshatra Finder (မွေးနက္ခတ် နှင့် လဂ် ရှာဖွေရေး)
+### 5. 🧭 Birth Sky & Nakshatra Finder (မွေးနက္ခတ် နှင့် လဂ် ရှာဖွေရေး)
 - Input birth date, birth time (24-hour precision), and Myanmar city preset or custom GPS coordinates.
 - **Eastern Horizon Lagna (လဂ် / Ascendant):** Dynamically calculates and renders the exact sidereal zodiac sign and degree rising on the eastern horizon (`🌅 လဂ် (Lagna) · [Zodiac] [Deg]°`).
 - **Janma Nakshatra (မွေးနက္ခတ်):** Highlights the native's birth constellation in glowing radiant gold.
@@ -42,15 +52,15 @@ By computing observer-centric horizontal coordinates in real time, the platform 
 - **Naming Syllables & Day Guardian (နေ့နံ နှင့် မင်္ဂလာအက္ခရာများ):** Identifies auspicious naming consonants and planetary animal symbols.
 - **Time Jump & Export:** Instantly jumps the interactive sky dome back to the birth moment and exports structured text records.
 
-### 5. ⏳ Time-Travel & Geolocation Engine
+### 6. ⏳ Time-Travel & Geolocation Engine
 - Smooth 24-hour time scrubber slider and historical calendar picker.
 - Continuous animation loop with variable speed multipliers (**1x, 60x, 1h/sec, 1day/sec**).
 - Myanmar city presets (*Yangon, Mandalay, Bagan, Taunggyi, Kalaw, Naypyidaw*) with HTML5 GPS Geolocation integration.
 
-### 6. 🌌 NASA Astronomy Picture of the Day (APOD)
+### 7. 🌌 NASA Astronomy Picture of the Day (APOD)
 - Next.js server-side cached API route fetching NASA's daily high-resolution space highlight with Burmese translations.
 
-### 7. 🎵 432 Hz Cosmic Ambient Synthesizer
+### 8. 🎵 432 Hz Cosmic Ambient Synthesizer
 - Built-in Web Audio API dual-oscillator ambient soundscape tuned to harmonic 432 Hz celestial resonance.
 
 ---
@@ -139,23 +149,27 @@ sequenceDiagram
 
 ## 📐 Mathematical Foundations
 
-### 1. Conformal Stereographic Projection
+### 1. Conformal Stereographic Projection with 360° Azimuth Rotation & Pan/Zoom
 
-To map the 3D celestial sphere $(\text{azimuth}, \text{altitude})$ onto a planar 2D canvas of radius $R$ centered at $(x_c, y_c)$, NakshatraMM uses stereographic projection with the projection center at the observer's nadir (looking straight up at the zenith):
+To map the 3D celestial sphere $(\text{azimuth}, \text{altitude})$ onto a planar 2D canvas of base radius $R_{\text{base}}$ centered at $(x_c, y_c)$ under interactive zoom $z \in [1.0, 4.0]$, azimuth rotation $\theta_{\text{rot}} \in [0^\circ, 360^\circ)$, and translation offset $(\Delta x, \Delta y)$, NakshatraMM evaluates:
+
+$$R = R_{\text{max}} \cdot z, \quad \text{where } R_{\text{max}} = \max\left(90, \frac{\min(W, H)}{2} - 42\right)$$
 
 $$r = R \cdot \frac{\cos(\text{alt})}{1 + \sin(\text{alt})}$$
 
-where $\text{alt} \in [0^\circ, 90^\circ]$ is the celestial body's altitude. At the zenith ($\text{alt} = 90^\circ$), $r = 0$ (the center of the canvas). At the horizon ($\text{alt} = 0^\circ$), $r = R$ (the bounding ring).
+where $\text{alt} \in [0^\circ, 90^\circ]$ is the celestial body's altitude. At the zenith ($\text{alt} = 90^\circ$), $r = 0$ (the center of the dome). At the horizon ($\text{alt} = 0^\circ$), $r = R$ (the bounding ring).
 
-The planar screen coordinates $(x, y)$ are given by:
+Applying the observer's azimuth rotation offset $\theta_{\text{rot}}$ and 2D pan offset $(\Delta x, \Delta y)$:
+
+$$\theta = \left(\left(\text{az} + \theta_{\text{rot}}\right) \pmod{360^\circ} + 360^\circ\right) \pmod{360^\circ}$$
 
 $$\begin{aligned}
-x &= x_c - r \cdot \sin(\text{az}) \\
-y &= y_c - r \cdot \cos(\text{az})
+x &= (x_c + \Delta x) - r \cdot \sin(\theta) \\
+y &= (y_c + \Delta y) - r \cdot \cos(\theta)
 \end{aligned}$$
 
 > [!NOTE]
-> Since an observer looks *upward* toward the celestial dome with North at the top ($\text{az} = 0^\circ$), East is situated on the left ($\text{az} = 90^\circ \implies x = x_c - r$) and West is on the right ($\text{az} = 270^\circ \implies x = x_c + r$).
+> When $\theta_{\text{rot}} = 0^\circ$ (North Up), an observer looks *upward* toward the celestial dome with North at the top ($\theta = 0^\circ$), East on the left ($\theta = 90^\circ$), and West on the right ($\theta = 270^\circ$). Rotating $\theta_{\text{rot}}$ smoothly spins the sky dome to face any desired cardinal direction without distorting angular relations.
 
 ---
 
@@ -296,6 +310,32 @@ npm run start -- -p 3000
 Validate that all 27 Nakshatras, 85 stars, and 67 constellation lines have accurate J2000 RA/Dec bounds:
 ```bash
 node scripts/verify-nakshatras.mjs
+```
+
+### 5. Deploy to Vercel (Production)
+
+NakshatraMM is built with Next.js App Router and optimized for zero-configuration edge and serverless deployment on [Vercel](https://vercel.com):
+
+#### Method A: Deploy via GitHub & Vercel Dashboard (Recommended)
+1. Initialize git and push to GitHub:
+   ```bash
+   git init
+   git add .
+   git commit -m "feat: complete NakshatraMM simulator"
+   git branch -M main
+   git remote add origin https://github.com/<your-username>/nakshatramm.git
+   git push -u origin main
+   ```
+2. Navigate to [Vercel Dashboard](https://vercel.com/new), import your repository, and click **Deploy**.
+3. *(Optional)* Under **Environment Variables**, set `NASA_API_KEY` (automatically falls back to `DEMO_KEY` if omitted).
+
+#### Method B: Instant Deploy via Vercel CLI
+```bash
+# 1. Run Vercel CLI & follow interactive login prompts
+npx vercel
+
+# 2. Deploy directly to production
+npx vercel --prod
 ```
 
 ---
