@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NakshatraMM — မြန်မာ့နက္ခတ် ၂၇ လုံး ကောင်းကင်ပြက္ခဒိန် (Burmese Astronomical Simulator)</title>
+
+  <!-- Google Fonts: Noto Sans Myanmar & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Noto+Sans+Myanmar:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cosmic: {
+              950: '#030511',
+              900: '#050816',
+              850: '#081026',
+              800: '#0d1838',
+              700: '#152554'
+            }
+          },
+          fontFamily: {
+            mm: ['"Noto Sans Myanmar"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="space-gradient-bg h-screen w-screen flex flex-col select-none overflow-hidden text-slate-100">
+
+  <!-- TOP APP HEADER -->
+  <header class="h-14 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-4 flex items-center justify-between z-30 shrink-0">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-sky-500 to-amber-300 flex items-center justify-center shadow-lg shadow-sky-500/20 text-lg">
+        ⭐
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-base font-bold tracking-tight text-white flex items-center gap-1.5 font-mm">
+            <span>NakshatraMM</span>
+            <span class="text-xs px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 font-normal">မြန်မာ့နက္ခတ် ၂၇ လုံး</span>
+          </h1>
+        </div>
+        <p class="text-[10px] text-slate-400 font-mono hidden sm:block">360° Burmese Celestial Dome & Ephemeris Simulator</p>
+      </div>
+    </div>
+
+    <!-- Live Moon Nakshatra Banner (စန်းယှဉ်နက္ခတ်) -->
+    <div id="moonNakshatraHeader" class="hidden md:flex items-center space-x-3 px-3 py-1 rounded-full bg-slate-900/90 border border-amber-500/30 text-xs shadow-inner cursor-pointer hover:border-amber-400 transition" title="လက်ရှိ စန်းယှဉ်နက္ခတ် အသေးစိတ်ကြည့်ရန် နှိပ်ပါ">
+      <span id="moonIconHeader" class="text-base text-amber-300 animate-pulse">🌙</span>
+      <div class="flex items-center space-x-2">
+        <span class="text-slate-400 font-mm">စန်းယှဉ်နက္ခတ်:</span>
+        <span id="currentMoonNakshatraName" class="font-semibold text-amber-300 font-mm">တွက်ချက်နေသည်...</span>
+        <span id="currentMoonPadaBadge" class="text-[10px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-200 border border-amber-500/30 font-mono">ပါဒ် ၁</span>
+        <span class="text-slate-600">|</span>
+        <span id="currentMoonZodiac" class="text-slate-300 font-mm">မိဿရာသီ</span>
+        <span id="currentMoonPhaseSummary" class="text-slate-400 font-mono text-[11px]">(50%)</span>
+      </div>
+    </div>
+
+    <!-- Header Actions & Clock -->
+    <div class="flex items-center space-x-2.5">
+      <div class="text-right hidden lg:block font-mono text-xs">
+        <div id="clockMyanmar" class="font-semibold text-sky-300">--:--:-- MMT</div>
+        <div id="clockUtc" class="text-[10px] text-slate-400">UTC --:--:--</div>
+      </div>
+
+      <!-- Quick Nakshatra Finder Dropdown -->
+      <div class="relative">
+        <button id="btnOpenFinder" class="glass-button px-2.5 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 font-mm" title="နက္ခတ်ရှာဖွေရန်">
+          <span>🔍</span>
+          <span class="hidden sm:inline">နက္ခတ် ၂၇ လုံး</span>
+        </button>
+        <!-- Finder Popover -->
+        <div id="finderPopover" class="hidden absolute right-0 mt-2 w-72 max-h-96 glass-panel rounded-xl p-2 z-50 flex-col shadow-2xl overflow-hidden border border-slate-700">
+          <div class="p-1 border-b border-slate-700/60 pb-2 mb-1">
+            <input type="text" id="finderSearchInput" placeholder="နက္ခတ် အမည်ဖြင့် ရှာဖွေပါ..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-sky-400 font-mm">
+          </div>
+          <div id="finderListContainer" class="overflow-y-auto space-y-1 flex-1 pr-1 max-h-72">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- NASA APOD Button -->
+      <button id="btnToggleApod" class="glass-button px-2.5 py-1.5 rounded-lg text-xs flex items-center space-x-1.5 text-amber-300" title="NASA Daily Space Image">
+        <span>🚀</span>
+        <span class="hidden sm:inline">NASA APOD</span>
+      </button>
+
+      <!-- Help / Guide Modal Button -->
+      <button id="btnOpenHelp" class="glass-button p-1.5 rounded-lg text-slate-300 hover:text-white" title="အသုံးပြုပုံနှင့် နက္ခတ်ဗေဒ အညွှန်း">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CANVAS & SIMULATION CONTAINER -->
+  <main class="relative flex-1 w-full h-full overflow-hidden flex items-center justify-center">
+
+    <!-- The 360-degree Sky Dome Canvas -->
+    <canvas id="skyCanvas" class="w-full h-full cursor-crosshair"></canvas>
+
+    <!-- FLOATING HUD: Top-Left Location & Observer Panel -->
+    <div class="absolute top-4 left-4 z-20 flex flex-col space-y-2 pointer-events-auto">
+      <div class="glass-panel rounded-2xl p-3 max-w-xs shadow-xl border border-slate-700/60 transition hover:border-slate-500/80">
+        <div class="flex items-center justify-between gap-2 mb-2">
+          <div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-300 font-mm">
+            <span class="text-sky-400">📍</span>
+            <span>လေ့လာသူ တည်နေရာ:</span>
+          </div>
+          <button id="btnGps" class="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 hover:bg-sky-500/40 text-sky-300 border border-sky-500/30 transition flex items-center gap-1 font-mono" title="လက်ရှိ GPS တည်နေရာရယူမည်">
+            <span>📡 GPS</span>
+          </button>
+        </div>
+
+        <!-- City Dropdown -->
+        <select id="locationSelect" class="w-full bg-slate-900/90 text-white border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-sky-400 font-mm cursor-pointer">
+          <!-- Populated from data.js -->
+        </select>
+
+        <div class="mt-2.5 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div>
+            <span class="text-slate-500">Lat:</span> <span id="hudLat" class="text-slate-300">16.87°N</span>
+            <span class="text-slate-500 ml-1.5">Lon:</span> <span id="hudLon" class="text-slate-300">96.20°E</span>
+          </div>
+          <div>
+            <span class="text-slate-500">LST:</span> <span id="hudLst" class="text-sky-300">00:00h</span>
+          </div>
+        </div>
+
+        <div class="mt-1 flex items-center justify-between text-[10px] font-mono text-slate-400">
+          <div>
+            <span class="text-slate-500">Ayanamsa:</span> <span id="hudAyanamsa" class="text-amber-300">24.23° (Lahiri)</span>
+          </div>
+          <div id="hudDomeRotation" class="text-slate-400 text-[10px]" title="လှည့်ထားသော ထောင့်စွန်း">
+            <span>Rot: 0°</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLOATING HUD: Top-Right NASA APOD Live Card (Collapsible) -->
+    <div id="apodFloatingBadge" class="absolute top-4 right-4 z-20 pointer-events-auto transition-all duration-300 max-w-xs sm:max-w-sm hidden">
+      <div class="glass-panel rounded-2xl overflow-hidden shadow-2xl border border-indigo-500/30">
+        <div class="p-2.5 bg-gradient-to-r from-indigo-950/80 to-purple-950/80 border-b border-slate-800 flex items-center justify-between cursor-pointer" id="apodHeaderClick">
+          <div class="flex items-center space-x-2">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            <span class="text-xs font-semibold text-indigo-300 font-mono">NASA APOD TODAY</span>
+          </div>
+          <button id="btnCloseApodBadge" class="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 rounded">✕</button>
+        </div>
+        <div id="apodBodyContent" class="p-3">
+          <div class="relative w-full h-36 rounded-xl overflow-hidden bg-slate-900 mb-2.5 group">
+            <img id="apodImage" src="" alt="NASA APOD" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+            <div id="apodLoadingSpinner" class="absolute inset-0 flex items-center justify-center bg-slate-950/70 text-xs text-sky-300 font-mono">
+              Fetching NASA...
+            </div>
+          </div>
+          <h3 id="apodTitle" class="text-xs font-bold text-white mb-1 line-clamp-1 font-mono">Astronomy Picture of the Day</h3>
+          <p id="apodDate" class="text-[10px] text-sky-400 font-mono mb-1.5">2026-11-08</p>
+          <p id="apodExplanation" class="text-[11px] text-slate-300 line-clamp-3 leading-relaxed mb-2 font-mm">
+            NASA Ephemeris ပုံရိပ်အား ရယူနေပါသည်...
+          </p>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px]">
+            <a id="apodFullLink" href="#" target="_blank" rel="noopener noreferrer" class="text-sky-400 hover:underline flex items-center gap-1 font-mono">
+              View High-Res ↗
+            </a>
+            <span class="text-slate-500 font-mono" id="apodCopyright">NASA/JPL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CANVAS INTERACTIVE HOVER TOOLTIP -->
+    <div id="canvasTooltip" class="absolute z-30 pointer-events-none hidden glass-panel px-3 py-1.5 rounded-xl border border-sky-400/40 shadow-2xl text-xs -translate-x-1/2 -translate-y-full mb-3 transition-opacity">
+      <div id="tooltipTitle" class="font-bold text-white font-mm flex items-center gap-1.5"></div>
+      <div id="tooltipSub" class="text-[11px] text-sky-300 font-mono mt-0.5"></div>
+      <div id="tooltipAltAz" class="text-[10px] text-slate-400 font-mono"></div>
+    </div>
+
+    <!-- FLOATING GLASSMORPHISM CONTROL BAR / DOCK (Bottom Center) -->
+    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[96%] max-w-4xl pointer-events-auto">
+      <div class="glass-dock rounded-2xl p-3 sm:p-3.5 space-y-2.5">
+
+        <!-- TIME CONTROLS & SCRUBBER ROW -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-3">
+          
+          <!-- Date / Time Input & Quick Buttons -->
+          <div class="flex items-center space-x-2 w-full md:w-auto justify-between md:justify-start">
+            <div class="flex items-center space-x-1.5">
+              <input type="date" id="inputDate" class="bg-slate-900/90 text-white border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono focus:outline-none focus:border-sky-400">
+              <input type="time" id="inputTime" step="1" class="bg-slate-900/90 text-white border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono focus:outline-none focus:border-sky-400">
+            </div>
+
+            <!-- Time-travel Steppers -->
+            <div class="flex items-center space-x-1">
+              <button id="btnMinus1h" class="glass-button px-2 py-1 rounded text-xs font-mono" title="-1 နာရီ">-1h</button>
+              <button id="btnNow" class="glass-button px-2.5 py-1 rounded text-xs font-mm font-semibold text-sky-300" title="လက်ရှိ အချိန်သို့ ပြန်သတ်မှတ်မည်">ယခု</button>
+              <button id="btnPlus1h" class="glass-button px-2 py-1 rounded text-xs font-mono" title="+1 နာရီ">+1h</button>
+            </div>
+          </div>
+
+          <!-- Time Scrubber Slider (-12h to +12h) -->
+          <div class="flex-1 w-full flex items-center space-x-3 px-1">
+            <span class="text-[10px] font-mono text-slate-400 shrink-0">-12h</span>
+            <input type="range" id="timeScrubber" min="-720" max="720" value="0" step="1" class="time-scrubber flex-1" title="အချိန် ရှေ့/နောက် ရွှေ့ဆွဲရန် စကရပ်ဘာ">
+            <span class="text-[10px] font-mono text-slate-400 shrink-0">+12h</span>
+            <span id="scrubberOffsetDisplay" class="text-xs font-mono text-sky-300 w-16 text-right shrink-0">±0 min</span>
+          </div>
+
+          <!-- Play/Pause & Speed Mult -->
+          <div class="flex items-center space-x-2 shrink-0">
+            <button id="btnPlayPause" class="px-3 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-sky-500/25 transition">
+              <span id="playPauseIcon">▶</span>
+              <span id="playPauseText" class="font-mm">ရွေ့လျားမည်</span>
+            </button>
+
+            <!-- Speed Mult Selector -->
+            <select id="speedSelect" class="bg-slate-900/90 text-slate-300 border border-slate-700 rounded-lg px-2 py-1 text-xs font-mono focus:outline-none focus:border-sky-400 cursor-pointer">
+              <option value="1">1x Real</option>
+              <option value="60" selected>60x (1m/s)</option>
+              <option value="300">300x (5m/s)</option>
+              <option value="1800">1800x (30m/s)</option>
+              <option value="7200">7200x (2h/s)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- VISUAL DISPLAY TOGGLES ROW -->
+        <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <!-- Toggle Nakshatra Labels -->
+            <button id="toggleNakLabels" class="glass-button active px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="true">
+              <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+              <span>နက္ခတ်အမည်များ</span>
+            </button>
+
+            <!-- Toggle Constellation Lines -->
+            <button id="toggleConstLines" class="glass-button active px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="true">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span>ကြယ်စုမျဉ်းများ</span>
+            </button>
+
+            <!-- Toggle Below Horizon (X-Ray Earth) -->
+            <button id="toggleBelowHorizon" class="glass-button px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="false">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+              <span>မြေကမ္ဘာဖောက်ထွင်း (X-Ray)</span>
+            </button>
+
+            <!-- Toggle Planets -->
+            <button id="togglePlanets" class="glass-button active px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="true">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              <span>ဂြိုဟ်မင်း ၇ လုံး</span>
+            </button>
+
+            <!-- Toggle Major Navigational Stars -->
+            <button id="toggleMajorStars" class="glass-button active px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="true">
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+              <span>ပင်မကြယ်ကြီးများ</span>
+            </button>
+
+            <!-- Toggle Ecliptic -->
+            <button id="toggleEcliptic" class="glass-button active px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mm" data-active="true">
+              <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span>
+              <span>နေသွားလမ်း (Ecliptic)</span>
+            </button>
+          </div>
+
+          <!-- Reset Orientation / Center Button -->
+          <div class="flex items-center space-x-1 ml-auto">
+            <button id="btnResetRotation" class="glass-button px-2 py-1 rounded-lg text-[11px] font-mono text-slate-400 hover:text-white" title="မြောက်အရပ်သို့ မူလပြန်ထားမည်">
+              ↺ N Up
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE-OVER DETAIL CARD (Right Side) -->
+    <aside id="detailDrawer" class="slide-drawer drawer-closed absolute top-0 right-0 bottom-0 w-full sm:w-96 md:w-[420px] z-40 glass-panel border-l border-slate-700/80 shadow-2xl flex flex-col pointer-events-auto">
+      
+      <!-- Drawer Header -->
+      <div class="p-4 border-b border-slate-800/80 flex items-center justify-between bg-slate-900/60 shrink-0">
+        <div class="flex items-center space-x-3">
+          <div id="drawerIconBadge" class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-xl text-sky-300">
+            ⭐
+          </div>
+          <div>
+            <div id="drawerTypeBadge" class="text-[10px] font-mono text-sky-400 uppercase tracking-wider">NAKSHATRA</div>
+            <h2 id="drawerTitleMm" class="text-base font-bold text-white font-mm leading-tight">အဿဝဏီ နက္ခတ်</h2>
+            <div id="drawerTitleEn" class="text-xs text-slate-400 font-mono">Ashwini (Aśvinī)</div>
+          </div>
+        </div>
+        <button id="btnCloseDrawer" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/80 transition" title="Close Panel">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <!-- Drawer Scrollable Content -->
+      <div class="flex-1 overflow-y-auto p-4 space-y-4 font-mm text-xs leading-relaxed">
+        
+        <!-- Live Real-Time Coordinates Card -->
+        <div class="p-3 rounded-xl bg-slate-900/90 border border-slate-700/60 space-y-2">
+          <div class="text-[11px] font-semibold text-slate-300 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>တိုက်ရိုက် ကောင်းကင်တည်နေရာ</span>
+            </span>
+            <span id="drawerVisibilityBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-mono">
+              မြင်တွေ့နိုင်သည် (Above Horizon)
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-center pt-1 font-mono">
+            <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+              <div class="text-[10px] text-slate-500">Altitude (အမြင့်ထောင့်)</div>
+              <div id="drawerAltitude" class="text-sm font-bold text-sky-300">+45.2°</div>
+            </div>
+            <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+              <div class="text-[10px] text-slate-500">Azimuth (အရပ်မျက်နှာ)</div>
+              <div id="drawerAzimuth" class="text-sm font-bold text-sky-300">128.5° (SE)</div>
+            </div>
+            <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+              <div class="text-[10px] text-slate-500">RA (ကြယ်ဖြတ်ချိန်)</div>
+              <div id="drawerRa" class="text-xs font-semibold text-slate-300">02h 07m</div>
+            </div>
+            <div class="bg-slate-950/80 p-2 rounded-lg border border-slate-800">
+              <div class="text-[10px] text-slate-500">Declination (အီကွေတာအကွာ)</div>
+              <div id="drawerDec" class="text-xs font-semibold text-slate-300">+23° 27'</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Burmese Traditional Lore Section -->
+        <div id="drawerLoreSection" class="space-y-3">
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2.5">
+            <h4 class="text-xs font-bold text-amber-300 flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
+              <span>📜</span>
+              <span>မြန်မာ့ရိုးရာ နက္ခတ်အမှတ်အသားများ</span>
+            </h4>
+
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div>
+                <span class="text-slate-400">ပုံသဏ္ဌာန်:</span>
+                <span id="drawerShapeMm" class="text-white font-medium ml-1">မြင်းခေါင်းသဏ္ဌာန်</span>
+              </div>
+              <div>
+                <span class="text-slate-400">ကြယ်အရေအတွက်:</span>
+                <span id="drawerStarCount" class="text-white font-mono ml-1">၃ လုံး</span>
+              </div>
+              <div>
+                <span class="text-slate-400">စိုးမိုးသောနတ်:</span>
+                <span id="drawerDeityMm" class="text-white font-medium ml-1">အသွင်ညီနောင်</span>
+              </div>
+              <div>
+                <span class="text-slate-400">စိုးမိုးဂြိုဟ်:</span>
+                <span id="drawerRulerMm" class="text-white font-medium ml-1">ကိတ် (Ketu)</span>
+              </div>
+            </div>
+
+            <div class="pt-1 text-[11px]">
+              <span class="text-slate-400">ရာသီခွင် ဒီဂရီ:</span>
+              <span id="drawerSpanDeg" class="text-sky-300 font-mono ml-1">0.0° - 13.3° (မိဿရာသီ)</span>
+            </div>
+          </div>
+
+          <!-- Detailed Burmese Lore Description -->
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1.5">
+            <h4 class="text-xs font-bold text-slate-300 flex items-center gap-1.5">
+              <span>📖</span>
+              <span>ရိုးရာဗေဒင်နှင့် နက္ခတ်ဆိုင်ရာ အဓိပ္ပာယ်</span>
+            </h4>
+            <p id="drawerDescriptionMm" class="text-slate-300 leading-relaxed text-[11px]">
+              နက္ခတ် ၂၇ လုံး၏ အဦးအစ ဖြစ်သည်။ လျင်မြန်ခြင်း၊ ကုသခြင်းနှင့် စွမ်းအင်သစ် စတင်ခြင်း၏ သင်္ကေတဖြစ်သည်။
+            </p>
+            <p id="drawerDescriptionEn" class="text-slate-400 text-[10px] font-mono pt-1 leading-normal border-t border-slate-800/60">
+              The first Nakshatra, symbolized by a horse's head. Associated with speed, healing, and vitality.
+            </p>
+          </div>
+
+          <!-- Star Cluster Members -->
+          <div id="drawerStarClusterBox" class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <h4 class="text-xs font-bold text-slate-300 flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span>✨</span>
+                <span>ကြယ်စုဝင်ကြယ်များ</span>
+              </span>
+              <span id="drawerClusterCount" class="text-[10px] font-mono text-slate-500">3 stars</span>
+            </h4>
+            <div id="drawerStarsList" class="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Planet Specific Information (Visible when planet is selected) -->
+        <div id="drawerPlanetSection" class="hidden space-y-3">
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-2">
+            <h4 class="text-xs font-bold text-amber-300 flex items-center gap-1.5 border-b border-slate-800 pb-1.5">
+              <span>🪐</span>
+              <span>ဂြိုဟ်မင်း အချက်အလက်</span>
+            </h4>
+            <div class="grid grid-cols-2 gap-2 text-[11px]">
+              <div>
+                <span class="text-slate-400">လက်ရှိ ရာသီခွင်:</span>
+                <span id="drawerPlanetZodiac" class="text-white font-medium ml-1">မိဿ</span>
+              </div>
+              <div>
+                <span class="text-slate-400">ရောက်ရှိနက္ခတ်:</span>
+                <span id="drawerPlanetNakshatra" class="text-sky-300 font-medium ml-1">အဿဝဏီ</span>
+              </div>
+              <div>
+                <span class="text-slate-400">အကွာအဝေး:</span>
+                <span id="drawerPlanetDist" class="text-white font-mono ml-1">1.0 AU</span>
+              </div>
+              <div>
+                <span class="text-slate-400">အလင်းပမာဏ (Mag):</span>
+                <span id="drawerPlanetMag" class="text-white font-mono ml-1">-1.5</span>
+              </div>
+            </div>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 space-y-1.5">
+            <h4 class="text-xs font-bold text-slate-300">မြန်မာ့ရိုးရာ ဂြိုဟ်အယူအဆ</h4>
+            <p id="drawerPlanetInfoMm" class="text-slate-300 leading-relaxed text-[11px]"></p>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- HELP & GUIDE MODAL -->
+  <div id="helpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+    <div class="glass-panel rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-700/80 max-h-[85vh] overflow-y-auto space-y-4 font-mm text-xs">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <span>⭐</span>
+          <span>NakshatraMM အသုံးပြုပုံ လမ်းညွှန်</span>
+        </h3>
+        <button id="btnCloseHelp" class="text-slate-400 hover:text-white text-base">✕</button>
+      </div>
+
+      <div class="space-y-3 leading-relaxed text-slate-300">
+        <div>
+          <h4 class="font-bold text-sky-400 mb-1">၁။ ၃၆၀ ဒီဂရီ မြန်မာ့ကောင်းကင်ပြက္ခဒိန် အကြောင်း</h4>
+          <p>
+            ဤဆော့ဖ်ဝဲသည် ခေတ်မီ နက္ခတ္တဗေဒသင်္ချာ (NASA/JPL Ephemeris calculations) နှင့် မြန်မာ့ရိုးရာ နက္ခတ် ၂၇ လုံး (နဝင်း၊ ပါဒ်၊ စန်းယှဉ်နက္ခတ်) တို့ကို ပေါင်းစပ်တွက်ချက်ထားသည့် Stereographic Sky Projection Simulator ဖြစ်ပါသည်။
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-sky-400 mb-1">၂။ စန်းယှဉ်နက္ခတ် (Moon Nakshatra) တွက်ချက်ပုံ</h4>
+          <p>
+            လမင်း (စန်း) ၏ တည်နေရာကို Lahiri Ayanamsa (~24.23°) ဖြင့် နှုတ်ကာ Sidereal Longitude (နိယာယန စနစ်) သို့ ပြောင်းလဲပြီး လက်ရှိ လမင်း ဖြတ်သန်းရောက်ရှိနေသော နက္ခတ်နှင့် ပါဒ် (၁၊ ၂၊ ၃၊ ၄) ကို တိကျစွာ ဖော်ပြပေးပါသည်။
+          </p>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-sky-400 mb-1">၃။ ကောင်းကင်ပြင် ကြည့်ရှုနည်း</h4>
+          <ul class="list-disc list-inside space-y-1 text-slate-300">
+            <li><b>အပေါ်ဗဟို (Zenith 90°):</b> မိမိခေါင်းပေါ် တည့်တည့် ကောင်းကင်ပြင်</li>
+            <li><b>အစွန်းစက်ဝိုင်း (Horizon 0°):</b> မြေပြင်မိုးကုတ်စက်ဝိုင်း</li>
+            <li><b>အရပ်မျက်နှာ:</b> အပေါ် = မြောက် (N)၊ ဘယ် = အရှေ့ (E)၊ အောက် = တောင် (S)၊ ညာ = အနောက် (W) (ကောင်းကင်ကို မော့ကြည့်သည့် သဘာဝအတိုင်း)</li>
+            <li><b>Interactive:</b> ကြယ် သို့မဟုတ် ဂြိုဟ်ပေါ်သို့ မောက်စ်တင်လျှင် အမည်နှင့် အမြင့်ထောင့် ပေါ်လာမည်ဖြစ်ပြီး၊ ကလစ်နှိပ်ပါက ညာဘက်ခြမ်းတွင် ရိုးရာဗေဒင်အချက်အလက်များ အပြည့်အစုံ ပေါ်လာပါမည်။</li>
+            <li><b>မောက်စ်ဖြင့် လှည့်နိုင်ခြင်း:</b> Canvas ပေါ်တွင် မောက်စ်ဖိဆွဲ၍ ကောင်းကင်ပြင်ကို ၃၆၀ ဒီဂရီ လှည့်ပတ်ကြည့်ရှုနိုင်ပါသည်။</li>
+          </ul>
+        </div>
+
+        <div class="pt-3 border-t border-slate-700/80 text-[11px] text-slate-400 font-mono text-center">
+          Zero-Build-Step Architecture • Pure HTML5 Canvas & ES Modules
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION ENTRY SCRIPT (ES Module) -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

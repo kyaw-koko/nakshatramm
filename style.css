@@ -1,0 +1,216 @@
+/* NakshatraMM — Cosmic Dark Theme & Glassmorphism Styling */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Noto+Sans+Myanmar:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --space-bg: #050816;
+  --space-surface: rgba(13, 22, 48, 0.75);
+  --space-border: rgba(120, 160, 255, 0.18);
+  --space-border-active: rgba(147, 197, 253, 0.5);
+  --glow-cyan: rgba(56, 189, 248, 0.4);
+  --glow-gold: rgba(250, 204, 21, 0.5);
+  --glow-purple: rgba(192, 132, 252, 0.4);
+  --accent-gold: #facc15;
+  --accent-cyan: #38bdf8;
+  --accent-blue: #60a5fa;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--space-bg);
+  color: var(--text-main);
+  font-family: 'Noto Sans Myanmar', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-mm {
+  font-family: 'Noto Sans Myanmar', sans-serif;
+}
+
+/* Background Cosmic Nebula Canvas & Starfield */
+.space-gradient-bg {
+  background: 
+    radial-gradient(circle at 50% 15%, rgba(30, 58, 138, 0.25) 0%, transparent 60%),
+    radial-gradient(circle at 85% 75%, rgba(88, 28, 135, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 15% 85%, rgba(6, 78, 59, 0.15) 0%, transparent 50%),
+    #050816;
+}
+
+/* Glassmorphic Panels */
+.glass-panel {
+  background: rgba(10, 18, 38, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--space-border);
+  box-shadow: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
+}
+
+.glass-panel:hover {
+  border-color: rgba(147, 197, 253, 0.28);
+}
+
+.glass-dock {
+  background: rgba(8, 15, 33, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--space-border);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.65), 0 0 25px rgba(56, 189, 248, 0.08);
+}
+
+.glass-button {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  color: #e2e8f0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-button:hover {
+  background: rgba(51, 65, 85, 0.85);
+  border-color: var(--accent-cyan);
+  color: #ffffff;
+  box-shadow: 0 0 12px var(--glow-cyan);
+}
+
+.glass-button.active {
+  background: rgba(37, 99, 235, 0.35);
+  border-color: var(--accent-cyan);
+  color: #38bdf8;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.35);
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(5, 8, 22, 0.6);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+
+/* Slider Controls */
+input[type=range].time-scrubber {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(90deg, #1e293b 0%, #3b82f6 50%, #1e293b 100%);
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+input[type=range].time-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.9), 0 0 20px rgba(56, 189, 248, 0.4);
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+input[type=range].time-scrubber::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 16px rgba(56, 189, 248, 1), 0 0 28px rgba(56, 189, 248, 0.6);
+}
+
+input[type=range].time-scrubber::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #38bdf8;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.9);
+  cursor: pointer;
+}
+
+/* Animations */
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes reticle-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: reticle-spin 12s linear infinite;
+}
+
+/* Slide Over Drawer Transition */
+.slide-drawer {
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.slide-drawer.drawer-closed {
+  transform: translateX(105%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.slide-drawer.drawer-open {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Canvas styling */
+#skyCanvas {
+  display: block;
+  touch-action: none;
+  user-select: none;
+}
+
+/* Toggle Switches */
+.toggle-checkbox:checked {
+  right: 0;
+  border-color: #38bdf8;
+}
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #2563eb;
+}
