@@ -19,7 +19,16 @@ By computing observer-centric horizontal coordinates in real time, the platform 
 
 ## ✨ Key Features
 
-### 1. 🔭 High-DPI Stereographic Sky Dome & 360° Compass Rotation
+### 1. 🌌 Full-Bleed Edge-to-Edge Spatial Canvas & Floating Glassmorphism HUD
+- **Spatial Map Architecture (Google Maps / Star Walk UI):** The celestial canvas renders full-bleed at `100vw × 100dvh` behind all interface elements (`fixed inset-0 z-0`). Users can drag, rotate, pinch, and zoom stars anywhere across the screen, including behind translucent frosted glass cards.
+- **Floating Glassmorphism Overlay:** Translucent frosted glass headers, banners, and docks (`bg-slate-950/45 backdrop-blur-md border-white/10`) allow cosmic stars and planets to visibly drift behind them while keeping interface controls crisp.
+- **Collapsible Moon Transit Pill:** The real-time transit banner smoothly collapses into a sleek compact pill (`🌙 စန်းယှဉ်: စိတြ · ပါဒ် ၃ · 73% ▾`) to maximize starry sky visibility, or expands into the full astrometric telemetry card.
+- **Right-Edge Spatial Controls:** Compact vertical stack for Zoom In/Out, 360° Compass Needle Dial with degree readout, rotation steps, view reset, fullscreen immersion, and Zen Mode.
+- **Floating Time-Travel Scrubber Dock:** Translucent dock floating at the bottom with 24-hour time scrubber slider, Play/Pause animation, speed cycling (**1x, 60x, 1h/s, 1d/s**), real-time reset, and quick layer toggles.
+- **Zen Mode (`Z` key):** Seamlessly suppresses all HUD elements for pure, uninterrupted stargazing with an easy one-touch restore pill.
+- **Slide-Over Settings Drawer:** Glassmorphism drawer for searching all 27 Nakshatras and 12 Zodiac signs, GPS geolocation, Myanmar city presets, and custom coordinates.
+
+### 2. 🔭 High-DPI Stereographic Sky Dome & 360° Compass Rotation
 - **Conformal Stereographic Projection:** Maps the full 360° celestial hemisphere without angular distortion near the zenith ($r = R \cdot \frac{\cos(\text{alt})}{1 + \sin(\text{alt})}$).
 - **360° Free Azimuth Sky Rotation:** Freely rotate the celestial dome around the zenith using dragging, two-finger twist gestures, keyboard shortcuts (`[` and `]`), or dedicated rotation dial buttons (`↺`, `🧭 0°`, `↻`). Cardinal directions and celestial objects spin in exact mathematical synchrony.
 - **Mobile Safe Perimeter (Zero Horizon Clipping):** Dynamically adjusts radial clearance ($R_{\text{max}} = \max(90, \min(W, H)/2 - 42)$) and utilizes `100dvh` viewport layout so North, East, South, and West cardinal labels and the full 360° horizon ring remain 100% visible on mobile portrait screens without any bottom cut-offs.
@@ -27,13 +36,6 @@ By computing observer-centric horizontal coordinates in real time, the platform 
 - **Altitude & Azimuth Grid:** Concentric rings at $30^\circ$ and $60^\circ$, zenith crosshair, and dual Burmese-English cardinal points (*မြောက် N, အရှေ့ E, တောင် S, အနောက် W*).
 - **Sub-Pixel Hit Detection:** Hover and click on any star, constellation line, or planet to open glassmorphism detail cards displaying J2000 astrometric telemetry alongside classical Burmese lore.
 - **X-Ray Earth Mode:** Toggle beneath-the-horizon viewing to inspect celestial bodies before they rise.
-
-### 2. 🚀 Full-Screen Space Exploration Mode & Zen HUD
-- **Native Fullscreen Immersion:** Toggle full-screen space exploration with the `F` key or the top-right toolbar button with dynamic High-DPI canvas resizing (`ResizeObserver`).
-- **Interactive Pan & Smooth Zoom:** Freely zoom from 1x full-dome overview up to 4x close-up inspection using mouse wheel, pinch-to-zoom on touchscreens, or floating `+` / `-` buttons. Smoothly pan across zoomed-in constellation clusters.
-- **Minimalist Floating HUD:** Translucent glassmorphism floating HUD bar displaying live time/location telemetry, compact 24-hour time scrubber, Play/Pause animation, speed cycling, and layer toggles.
-- **Zen Mode (`Z` key):** Complete HUD hiding for pure uninterrupted stargazing across the entire display, with a one-touch restore pill.
-- **Fullscreen In-Place Detail Drawer:** Selecting any star, Nakshatra, or planet opens an astrometric glassmorphism drawer directly within the fullscreen canvas without exiting the exploration mode.
 
 ### 3. 🌟 Authentic Burmese Nakshatra Dataset (85 Stars, 67 Constellation Lines)
 - Comprehensive catalog of all **27 Burmese Nakshatras** (*အဿဝဏီ / Ashwini* to *ရေဝတီ / Revati*).
@@ -361,3 +363,5 @@ npx vercel --prod
 ## 📄 License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+#   n a k a t - p r o j e c t - t w o  
+ 
